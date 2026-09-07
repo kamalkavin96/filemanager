@@ -10,5 +10,6 @@ public class CreateUserRes {
     private Long id;
     private String username;
     private String role;
+    private  String email;
 
 }

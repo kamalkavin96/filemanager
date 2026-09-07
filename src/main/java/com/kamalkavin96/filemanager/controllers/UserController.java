@@ -1,5 +1,6 @@
 package com.kamalkavin96.filemanager.controllers;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,11 @@ import com.kamalkavin96.filemanager.services.UserService;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+
 
 @RestController
 @RequiredArgsConstructor
@@ -33,11 +39,16 @@ public class UserController {
         return ResponseEntity.ok(newUser);
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<CreateUserRes>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
+    }
+
+    @ExceptionHandler
     public ResponseEntity<Map<String, String>> handelRuntimeException(RuntimeException exception){
         return ResponseEntity
             .status(HttpStatus.NOT_FOUND)
             .body(null);
     }
-
-
+    
 }

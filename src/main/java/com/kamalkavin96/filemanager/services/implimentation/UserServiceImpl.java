@@ -1,5 +1,7 @@
 package com.kamalkavin96.filemanager.services.implimentation;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.kamalkavin96.filemanager.dto.request.CreateUserReq;
@@ -34,8 +36,22 @@ public class UserServiceImpl implements UserService {
         return new CreateUserRes(
             newUser.getId(),
             newUser.getUsername(),
-            newUser.getPassword()
+            newUser.getPassword(),
+            newUser.getEmail()
         );
+    }
+
+    @Override
+    public List<CreateUserRes> getAllUsers() {
+        return userRepo.findAll()
+            .stream()
+            .map(user -> new CreateUserRes(
+                user.getId(), 
+                user.getUsername(), 
+                user.getRole(), 
+                user.getEmail())
+            )
+            .toList();
     }
 
 }
