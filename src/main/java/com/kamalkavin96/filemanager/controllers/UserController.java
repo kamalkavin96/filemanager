@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 
 
@@ -40,6 +41,11 @@ public class UserController {
     @GetMapping
     public ResponseEntity<List<UserRes>> getAll() {
         return ResponseEntity.ok(userService.getAllUsers());
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<Long> getUser(@PathVariable("userId") Long userId){
+        return ResponseEntity.ok(userId);
     }
 
     @ExceptionHandler

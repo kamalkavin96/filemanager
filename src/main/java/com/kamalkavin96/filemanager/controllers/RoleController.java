@@ -5,9 +5,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.kamalkavin96.filemanager.dto.request.CreateRoleReq;
 import com.kamalkavin96.filemanager.dto.request.DeleteRoleReq;
+import com.kamalkavin96.filemanager.dto.request.RoleMappingReq;
 import com.kamalkavin96.filemanager.dto.response.RoleRes;
+import com.kamalkavin96.filemanager.dto.response.UserRoleRes;
+import com.kamalkavin96.filemanager.exception.RoleExistForUserException;
 import com.kamalkavin96.filemanager.exception.RoleNotFoundException;
 import com.kamalkavin96.filemanager.services.RoleService;
+import com.kamalkavin96.filemanager.services.UserRolesService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +33,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class RoleController {
 
     private final RoleService roleService;
+    private final UserRolesService userRolesService;
 
     @PostMapping
     public ResponseEntity<RoleRes> create(@RequestBody CreateRoleReq roleReq) {
@@ -47,11 +52,25 @@ public class RoleController {
         return ResponseEntity.ok(roleService.delete(deleteRoleReq.getId()));
     }
 
+    @PostMapping("map")
+    public ResponseEntity<UserRoleRes> mapRoleToUser(
+        @Valid @RequestBody RoleMappingReq roleMappingReq
+    ){
+        return ResponseEntity.ok(userRolesService.addUserRole(roleMappingReq.getUserId(), roleMappingReq.getRoleId()));
+    }
+
     @ExceptionHandler
-    public ResponseEntity<Map<String, Object>> handelRuntimeException(RoleNotFoundException exception){
+    public ResponseEntity<Map<String, Object>> handelRoleNotFoundException(RoleNotFoundException exception){
         return ResponseEntity
             .status(HttpStatus.NOT_FOUND)
             .body(Map.of("deleted", false, "message", exception.getMessage()));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<Map<String, Object>> handelRoleExistForUserException(RoleExistForUserException exception){
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(Map.of("message", exception.getMessage()));
     }
 
 }
