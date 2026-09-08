@@ -2,14 +2,13 @@ package com.kamalkavin96.filemanager.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
-public class CreateUserRes {
-
+@NoArgsConstructor
+public class RoleRes {
+    
     private Long id;
-    private String username;
-    private String role;
-    private  String email;
-
+    private String name;
 }

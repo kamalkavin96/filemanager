@@ -1,5 +1,10 @@
 package com.kamalkavin96.filemanager.dto.request;
 
+import java.time.LocalDate;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -7,9 +12,19 @@ import lombok.Data;
 @AllArgsConstructor
 public class CreateUserReq {
 
+    @NotBlank(message = "Name cannot be blank")
+    @Size(min = 5, max = 50, message = "Name must be 5 to 50 characters")
     private String username;
-    private String password;
-    private String role;
 
+    @NotBlank(message = "Email cannot be blank")
+    @Email(message = "Invalid email formate")
+    private String email;
+
+    @NotBlank(message = "Password cannot be blank")
+    @Size(min = 5, max = 50, message = "Password must be 5 to 50 characters")
+    private String password;
+
+    private String role;
+    private LocalDate dob;
 
 }

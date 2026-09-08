@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,15 +11,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kamalkavin96.filemanager.dto.request.CreateUserReq;
-import com.kamalkavin96.filemanager.dto.response.CreateUserRes;
+import com.kamalkavin96.filemanager.dto.response.UserRes;
 import com.kamalkavin96.filemanager.services.UserService;
 
-
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 
@@ -32,15 +30,15 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<CreateUserRes> create(
-            @RequestBody CreateUserReq createUserReq) {
+    public ResponseEntity<UserRes> create(
+            @Valid @RequestBody CreateUserReq createUserReq) {
 
-        CreateUserRes newUser = userService.createUser(createUserReq);
+        UserRes newUser = userService.createUser(createUserReq);
         return ResponseEntity.ok(newUser);
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<CreateUserRes>> getAllUsers() {
+    @GetMapping
+    public ResponseEntity<List<UserRes>> getAll() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
