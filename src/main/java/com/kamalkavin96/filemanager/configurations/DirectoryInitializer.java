@@ -3,16 +3,15 @@ package com.kamalkavin96.filemanager.configurations;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-@Component
-public class DirectoryInitializer implements CommandLineRunner {
+import lombok.extern.slf4j.Slf4j;
 
-    Logger logger = LoggerFactory.getLogger(DirectoryInitializer.class);
+@Component
+@Slf4j
+public class DirectoryInitializer implements CommandLineRunner {
 
     @Value("${app.filemanager.base-directory}")
     private String baseDirectory;
@@ -20,21 +19,21 @@ public class DirectoryInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        logger.info("Started Directory Initilization Configuration");
+        log.info("Started Directory Initilization Configuration");
         
 
         Path baseFilePath = Path.of(baseDirectory);
         
         if (Files.exists(baseFilePath)) {
-            logger.info("Base folder '%s' already exist".formatted(baseDirectory));
+            log.info("Base folder '{}' already exist", baseDirectory);
         } else {
-            logger.info("Base folder '%s' alr exist".formatted(baseDirectory));
+            log.info("Base folder '{}' alr exist", baseDirectory);
             Files.createDirectories(baseFilePath);
-            logger.info("Base folder '%s' created succesfully".formatted(baseDirectory));
+            log.info("Base folder '{}' created succesfully", baseDirectory);
         }
 
 
-        logger.info("Completed Directory Initilization Configuration");
+        log.info("Completed Directory Initilization Configuration");
     }
 
 }

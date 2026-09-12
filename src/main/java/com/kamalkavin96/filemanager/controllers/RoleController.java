@@ -4,15 +4,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kamalkavin96.filemanager.dto.request.CreateRoleReq;
-import com.kamalkavin96.filemanager.dto.request.DeleteRoleReq;
 import com.kamalkavin96.filemanager.dto.request.RoleMappingReq;
 import com.kamalkavin96.filemanager.dto.response.RoleRes;
-import com.kamalkavin96.filemanager.dto.response.UserRoleRes;
+import com.kamalkavin96.filemanager.dto.response.UserDetailRes;
 import com.kamalkavin96.filemanager.exception.RoleExistForUserException;
 import com.kamalkavin96.filemanager.exception.RoleNotFoundException;
 import com.kamalkavin96.filemanager.services.RoleService;
 import com.kamalkavin96.filemanager.services.UserRolesService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -26,9 +27,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @RequiredArgsConstructor
 @RestController
+@Tag(name = "Role Management")
 @RequestMapping("/api/v1/role")
 public class RoleController {
 
@@ -36,24 +39,28 @@ public class RoleController {
     private final UserRolesService userRolesService;
 
     @PostMapping
+    @Operation(summary = "Create Role")
     public ResponseEntity<RoleRes> create(@RequestBody CreateRoleReq roleReq) {
         RoleRes role = roleService.create(roleReq);
         return ResponseEntity.ok(role);
     }
 
     @GetMapping
+    @Operation(summary = "Get All Roles")
     public ResponseEntity<List<RoleRes>> getAll() {
         return ResponseEntity.ok(roleService.getAll());
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{roleId}")
+    @Operation(summary = "Delete User")
     public ResponseEntity<Map<String, Object>> delete(
-            @Valid @RequestBody DeleteRoleReq deleteRoleReq) {
-        return ResponseEntity.ok(roleService.delete(deleteRoleReq.getId()));
+            @PathVariable("roleId") Long roleId) {
+        return ResponseEntity.ok(roleService.delete(roleId));
     }
 
     @PostMapping("map")
-    public ResponseEntity<UserRoleRes> mapRoleToUser(
+    @Operation(summary = "Map Role")
+    public ResponseEntity<UserDetailRes> mapRoleToUser(
         @Valid @RequestBody RoleMappingReq roleMappingReq
     ){
         return ResponseEntity.ok(userRolesService.addUserRole(roleMappingReq.getUserId(), roleMappingReq.getRoleId()));

@@ -8,13 +8,21 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data 
 @NoArgsConstructor 
 @Entity 
-@Table (name = "user_roles")
+@Table (
+    name = "user_roles",
+    uniqueConstraints = {
+        @UniqueConstraint (
+            columnNames = {"user_id", "role_id"}
+        )
+    }
+)
 public class UserRoles {
 
     @Id 

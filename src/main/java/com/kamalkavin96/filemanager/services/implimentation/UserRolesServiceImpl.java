@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.kamalkavin96.filemanager.dto.response.UserRoleRes;
+import com.kamalkavin96.filemanager.dto.response.UserDetailRes;
 import com.kamalkavin96.filemanager.exception.RoleExistForUserException;
 import com.kamalkavin96.filemanager.exception.RoleNotFoundException;
 import com.kamalkavin96.filemanager.exception.UserNotFoundException;
@@ -29,7 +29,7 @@ public class UserRolesServiceImpl implements UserRolesService {
     private final UserRolesRepo userRolesRepo;
 
     @Override
-    public UserRoleRes addUserRole(Long userId, Long roleId) {
+    public UserDetailRes addUserRole(Long userId, Long roleId) {
         UserRoles userRoles = new UserRoles();
 
         User user = userRepo.findById(userId).orElseThrow(()-> new UserNotFoundException("User not found for Id: %s".formatted(userId)));
@@ -46,12 +46,25 @@ public class UserRolesServiceImpl implements UserRolesService {
         userRolesRepo.save(userRoles);
         List<String> roles = userRolesRepo.findByUserId(userId).stream().map(Role::getName).toList();
 
-        return  new UserRoleRes(
+        return  new UserDetailRes(
             roleId, 
             user.getUsername(), 
             user.getEmail(), 
+            null,
+            null,
+            null,
             roles);
 
+    }
+
+    public List<Role> getUserRole(Long userId){
+        User user = userRepo.findById(userId).orElseThrow(()-> new UserNotFoundException("User not found for Id: %s".formatted(userId)));
+        return  userRolesRepo.findByUserId(user.getId());
+    }
+
+    public boolean deleteUserRole(Long userId){
+        
+        return true;
     }
 
 }

@@ -1,7 +1,11 @@
 package com.kamalkavin96.filemanager.services;
 
-import com.kamalkavin96.filemanager.dto.response.UserRoleRes;
+import java.util.List;
+
+import com.kamalkavin96.filemanager.dto.response.UserDetailRes;
+import com.kamalkavin96.filemanager.models.Role;
 
 public interface UserRolesService {
-    UserRoleRes addUserRole(Long userId, Long roleId);
+    UserDetailRes addUserRole(Long userId, Long roleId);
+    List<Role> getUserRole(Long userId);
 }

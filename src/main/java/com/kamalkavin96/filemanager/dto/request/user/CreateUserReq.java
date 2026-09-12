@@ -1,4 +1,4 @@
-package com.kamalkavin96.filemanager.dto.request;
+package com.kamalkavin96.filemanager.dto.request.user;
 
 import java.time.LocalDate;
 
