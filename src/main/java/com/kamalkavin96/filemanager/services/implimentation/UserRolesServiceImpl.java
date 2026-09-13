@@ -5,6 +5,7 @@ import java.time.ZoneId;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.kamalkavin96.filemanager.dto.response.UserDetailRes;
 import com.kamalkavin96.filemanager.exception.RoleExistForUserException;
@@ -63,8 +64,13 @@ public class UserRolesServiceImpl implements UserRolesService {
     }
 
     public boolean deleteUserRole(Long userId){
-        
         return true;
+    }
+
+    @Override
+    @Transactional
+    public void removeRole(Long userId, Long roleId) {
+       userRolesRepo.deleteByUserIdAndRoleId(userId, roleId);
     }
 
 }

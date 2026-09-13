@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.kamalkavin96.filemanager.dao.UserDetailDao;
@@ -31,6 +32,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepo userRepo;
     private final RoleRepo roleRepo;
     private final UserRolesServiceImpl userRolesServiceImpl;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetailRes createUser(CreateUserReq createUserReq) {
@@ -41,7 +43,7 @@ public class UserServiceImpl implements UserService {
 
         User user = new User();
         user.setUsername(createUserReq.getUsername());
-        user.setPassword(createUserReq.getPassword());
+        user.setPassword(passwordEncoder.encode(createUserReq.getPassword()));
         user.setEmail(createUserReq.getEmail());
         user.setDob(createUserReq.getDob());
 
@@ -70,23 +72,27 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDetailRes> getAllUsers() {
-        return  userRolesRepo.getAllUsersDetails()
-            .stream()
-            .map(u->new UserDetailRes(
-                u.getId(), 
-                u.getUsername(), 
-                u.getEmail(), 
-                u.getDob(), 
-                u.getCreatedAt(), 
-                u.getUpdateAt(), 
-                Arrays.asList(u.getRoles().split(",")))
-            ).toList();
+        return userRolesRepo.getAllUsersDetails()
+                .stream()
+                .map(u -> new UserDetailRes(
+                        u.getId(),
+                        u.getUsername(),
+                        u.getEmail(),
+                        u.getDob(),
+                        u.getCreatedAt(),
+                        u.getUpdateAt(),
+                        Arrays.asList(u.getRoles().split(","))))
+                .toList();
     }
 
     @Override
     public UserDetailRes getUser(Long userId) {
 
         UserDetailDao user = userRolesRepo.getUsersDetails(userId);
+
+        if (user == null) {
+            throw new UserNotFoundException("User not found for Id: " + userId);
+        }
 
         return new UserDetailRes(
                 user.getId(),
@@ -123,6 +129,22 @@ public class UserServiceImpl implements UserService {
         return userRepo
                 .findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found for id: %s".formatted(userId)));
+
+    }
+
+    @Override
+    public UserDetailRes getCurrentUser(String email) {
+
+        UserDetailDao userDao = userRolesRepo.getUsersDetailsByEmail(email);
+
+        return new UserDetailRes(
+                userDao.getId(),
+                userDao.getUsername(),
+                userDao.getEmail(),
+                userDao.getDob(),
+                userDao.getCreatedAt(),
+                userDao.getUpdateAt(),
+                Arrays.asList(userDao.getRoles().split(",")));
 
     }
 

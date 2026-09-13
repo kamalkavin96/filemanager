@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -39,6 +40,7 @@ public class RoleController {
     private final UserRolesService userRolesService;
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Create Role")
     public ResponseEntity<RoleRes> create(@RequestBody CreateRoleReq roleReq) {
         RoleRes role = roleService.create(roleReq);
@@ -46,12 +48,14 @@ public class RoleController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @Operation(summary = "Get All Roles")
     public ResponseEntity<List<RoleRes>> getAll() {
         return ResponseEntity.ok(roleService.getAll());
     }
 
     @DeleteMapping("/{roleId}")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Delete User")
     public ResponseEntity<Map<String, Object>> delete(
             @PathVariable("roleId") Long roleId) {
@@ -59,6 +63,7 @@ public class RoleController {
     }
 
     @PostMapping("map")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Map Role")
     public ResponseEntity<UserDetailRes> mapRoleToUser(
         @Valid @RequestBody RoleMappingReq roleMappingReq

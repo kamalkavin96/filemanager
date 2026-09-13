@@ -7,5 +7,6 @@ import com.kamalkavin96.filemanager.models.Role;
 
 public interface UserRolesService {
     UserDetailRes addUserRole(Long userId, Long roleId);
+    void removeRole(Long userId, Long roleId);
     List<Role> getUserRole(Long userId);
 }

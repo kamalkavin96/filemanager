@@ -13,5 +13,5 @@ public interface UserService {
     UserDetailRes getUser(Long userId);
     boolean deleteUser(Long userId);
     void updateUser(UpdateUserReq updateUserReq);
-    
+    UserDetailRes getCurrentUser(String email);
 }

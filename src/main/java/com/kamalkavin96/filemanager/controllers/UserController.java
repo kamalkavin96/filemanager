@@ -1,5 +1,6 @@
 package com.kamalkavin96.filemanager.controllers;
 
+import com.kamalkavin96.filemanager.services.implimentation.UserRolesServiceImpl;
 import com.kamalkavin96.filemanager.services.implimentation.UserServiceImpl;
 import com.kamalkavin96.filemanager.utils.ConstantVariable;
 
@@ -8,6 +9,8 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,11 +37,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RequestMapping("/api/v1/users")
 @Tag(name = "User Management")
 public class UserController {
-
+    
     private final UserServiceImpl userServiceImpl;
     private final UserService userService;
 
-    @PostMapping
+    @PostMapping("/register")
     @Operation(summary = "Create User")
     public ResponseEntity<UserDetailRes> create(
             @Valid @RequestBody CreateUserReq createUserReq) {
@@ -48,18 +51,29 @@ public class UserController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Get All Users")
     public ResponseEntity<List<UserDetailRes>> getAll() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
     @GetMapping("/{userId}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @Operation(summary = "Get User")
     public ResponseEntity<UserDetailRes> getUser(@PathVariable("userId") Long userId) {
         return ResponseEntity.ok(userService.getUser(userId));
     }
 
+    @GetMapping("/me")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @Operation(summary = "Get User")
+    public ResponseEntity<UserDetailRes> getMe(Authentication authentication) {
+
+        return ResponseEntity.ok(userServiceImpl.getCurrentUser(authentication.getName()));
+    }
+
     @DeleteMapping("/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Delete User")
     public ResponseEntity<Map<String, Object>> delete(@PathVariable("userId") Long userId) {
         if (userServiceImpl.deleteUser(userId)) {
@@ -80,6 +94,7 @@ public class UserController {
 
     @ExceptionHandler
     @Operation(summary = "Update User")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Map<String, String>> handelRuntimeException(UsernameExistException exception) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)

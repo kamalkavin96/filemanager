@@ -1,36 +1,39 @@
 package com.kamalkavin96.filemanager.configurations;
 
-// import org.springframework.context.annotation.Bean;
-// import org.springframework.context.annotation.Configuration;
-// import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-// import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 
-// @Configuration
-// @EnableWebSecurity
+@Configuration
+@EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 
-    // @Bean
-    // public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity){
-    //     httpSecurity
-    //         .csrf(csrf->csrf.disable())
-    //         .authorizeHttpRequests(auth->auth.anyRequest().hasAuthority("ROLE_USER"))
-    //         .httpBasic(basic->basic.realmName("basic realm"))
-    //         .build();
-    //     return httpSecurity.build();
-    // }
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) {
+        httpSecurity
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                            "/api/v1/users/register",
+                                "/swagger-ui.html",
+                                "/swagger-ui/**",
+                                "/v3/api-docs",
+                                "/v3/api-docs/**")
+                        .permitAll()
+                        .anyRequest().authenticated())
+                .httpBasic(basic -> basic.realmName("File Manager"))
+                .formLogin(form -> form.disable());
+        return httpSecurity.build();
+    }
 
-    // @Bean
-    // public PasswordEncoder passwordEncoder(){
-    //     return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    // }
-
-    // @Bean
-    // public UserDetailsService userDetailsService(){
-    //     UserDetails userDetails = User.builder()
-    //         .username("user")
-    //         .password("{bcrypt}$2a$10$FMzmOkkfbApEWxS.4XzCKOR7EbbiwzkPEyGgYh6uQiPxurkpzRMa6")
-    //         .authorities("ROLE_USER")
-    //         .build();
-    //     return new InMemoryUserDetailsManager(userDetails);
-    // }
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 }

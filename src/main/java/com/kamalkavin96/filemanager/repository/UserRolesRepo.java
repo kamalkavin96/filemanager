@@ -50,10 +50,30 @@ public interface UserRolesRepo extends JpaRepository<UserRoles, Long> {
             FROM users u
             JOIN user_roles ur ON ur.user_id = u.id
             JOIN roles r on r.id = ur.role_id
+            WHERE u.email = :email
+            GROUP BY
+                u.id
+            """, nativeQuery = true)
+    UserDetailDao getUsersDetailsByEmail(String email);
+
+    @Query(value = """
+            SELECT
+                u.id, 
+                u.username, 
+                u.email, 
+                u.dob, 
+                u.created_at as createdAt, 
+                u.update_at as updateAt,
+                STRING_AGG(DISTINCT r.name, ',' ORDER BY r.name) as roles
+            FROM users u
+            JOIN user_roles ur ON ur.user_id = u.id
+            JOIN roles r on r.id = ur.role_id
             GROUP BY
                 u.id
             """, nativeQuery = true)
     List<UserDetailDao> getAllUsersDetails();
 
     void deleteByUserId(Long userId);
+
+    void deleteByUserIdAndRoleId(Long userId, Long roleId); 
 }
