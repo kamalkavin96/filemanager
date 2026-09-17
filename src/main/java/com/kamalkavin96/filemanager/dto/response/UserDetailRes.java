@@ -19,7 +19,6 @@ public class UserDetailRes {
     private Long id;
     private String username;
     private String email;
-    private LocalDate dob;
     private LocalDateTime createdAt;
     private LocalDateTime updateAt;
 

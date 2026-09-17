@@ -10,6 +10,7 @@ import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -93,8 +94,6 @@ public class UserController {
     }
 
     @ExceptionHandler
-    @Operation(summary = "Update User")
-    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Map<String, String>> handelRuntimeException(UsernameExistException exception) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
@@ -107,5 +106,6 @@ public class UserController {
                 .status(HttpStatus.NOT_FOUND)
                 .body(Map.of(ConstantVariable.MESSAGE, exception.getMessage()));
     }
+    
 
 }

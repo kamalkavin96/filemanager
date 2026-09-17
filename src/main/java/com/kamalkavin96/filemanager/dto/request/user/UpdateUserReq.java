@@ -1,6 +1,5 @@
 package com.kamalkavin96.filemanager.dto.request.user;
 
-import java.time.LocalDate;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -18,5 +17,4 @@ public class UpdateUserReq {
     private String userName;
     @Email(message = "Invalid email formate")
     private String email;
-    private LocalDate dob;
 }

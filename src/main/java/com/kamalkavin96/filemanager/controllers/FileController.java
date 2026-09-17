@@ -13,9 +13,12 @@ import com.kamalkavin96.filemanager.dto.request.FileGetAllReq;
 import com.kamalkavin96.filemanager.dto.response.FileCreateRes;
 import com.kamalkavin96.filemanager.dto.response.FileGetAllRes;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 
 @RestController
 @RequestMapping("/api/v1/files")
+@Tag(name = "File Management")
 public class FileController {
 
     @PostMapping("/create")

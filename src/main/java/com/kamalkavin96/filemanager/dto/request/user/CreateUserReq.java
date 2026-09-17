@@ -23,7 +23,5 @@ public class CreateUserReq {
     @NotBlank(message = "Password cannot be blank")
     @Size(min = 5, max = 50, message = "Password must be 5 to 50 characters")
     private String password;
-    
-    private LocalDate dob;
 
 }

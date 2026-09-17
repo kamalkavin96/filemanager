@@ -3,8 +3,8 @@ package com.kamalkavin96.filemanager.controllers;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.kamalkavin96.filemanager.dto.request.CreateRoleReq;
 import com.kamalkavin96.filemanager.dto.request.RoleMappingReq;
+import com.kamalkavin96.filemanager.dto.request.role.CreateRoleReq;
 import com.kamalkavin96.filemanager.dto.response.RoleRes;
 import com.kamalkavin96.filemanager.dto.response.UserDetailRes;
 import com.kamalkavin96.filemanager.exception.RoleExistForUserException;

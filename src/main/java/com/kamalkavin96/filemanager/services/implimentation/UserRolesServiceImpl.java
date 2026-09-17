@@ -50,8 +50,7 @@ public class UserRolesServiceImpl implements UserRolesService {
         return  new UserDetailRes(
             roleId, 
             user.getUsername(), 
-            user.getEmail(), 
-            null,
+            user.getEmail(),
             null,
             null,
             roles);

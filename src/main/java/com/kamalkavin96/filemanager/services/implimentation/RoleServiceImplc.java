@@ -7,7 +7,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import com.kamalkavin96.filemanager.dto.request.CreateRoleReq;
+import com.kamalkavin96.filemanager.dto.request.role.CreateRoleReq;
 import com.kamalkavin96.filemanager.dto.response.RoleRes;
 import com.kamalkavin96.filemanager.exception.RoleNotFoundException;
 import com.kamalkavin96.filemanager.models.Role;

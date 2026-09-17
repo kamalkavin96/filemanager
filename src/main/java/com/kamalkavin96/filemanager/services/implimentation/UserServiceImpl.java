@@ -33,6 +33,7 @@ public class UserServiceImpl implements UserService {
     private final RoleRepo roleRepo;
     private final UserRolesServiceImpl userRolesServiceImpl;
     private final PasswordEncoder passwordEncoder;
+    private final FolderServicesImpl folderServicesImpl;
 
     @Override
     public UserDetailRes createUser(CreateUserReq createUserReq) {
@@ -45,7 +46,6 @@ public class UserServiceImpl implements UserService {
         user.setUsername(createUserReq.getUsername());
         user.setPassword(passwordEncoder.encode(createUserReq.getPassword()));
         user.setEmail(createUserReq.getEmail());
-        user.setDob(createUserReq.getDob());
 
         LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Kolkata"));
 
@@ -60,11 +60,12 @@ public class UserServiceImpl implements UserService {
 
         List<Role> roles = userRolesServiceImpl.getUserRole(newUser.getId());
 
+        folderServicesImpl.createUserSpace(newUser.getId().toString());
+
         return new UserDetailRes(
                 newUser.getId(),
                 newUser.getUsername(),
                 newUser.getEmail(),
-                newUser.getDob(),
                 newUser.getCreatedAt(),
                 newUser.getUpdateAt(),
                 roles.stream().map(Role::getName).toList());
@@ -78,7 +79,6 @@ public class UserServiceImpl implements UserService {
                         u.getId(),
                         u.getUsername(),
                         u.getEmail(),
-                        u.getDob(),
                         u.getCreatedAt(),
                         u.getUpdateAt(),
                         Arrays.asList(u.getRoles().split(","))))
@@ -98,7 +98,6 @@ public class UserServiceImpl implements UserService {
                 user.getId(),
                 user.getUsername(),
                 user.getEmail(),
-                user.getDob(),
                 user.getCreatedAt(),
                 user.getUpdateAt(),
                 Arrays.asList(user.getRoles().split(",")));
@@ -141,7 +140,6 @@ public class UserServiceImpl implements UserService {
                 userDao.getId(),
                 userDao.getUsername(),
                 userDao.getEmail(),
-                userDao.getDob(),
                 userDao.getCreatedAt(),
                 userDao.getUpdateAt(),
                 Arrays.asList(userDao.getRoles().split(",")));
