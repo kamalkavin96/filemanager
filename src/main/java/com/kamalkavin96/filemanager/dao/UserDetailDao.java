@@ -14,7 +14,6 @@ public class UserDetailDao {
     private Long id;
     private String username;
     private String email;
-    private LocalDate dob;
     private LocalDateTime createdAt;
     private LocalDateTime updateAt;
     private String roles;

@@ -133,6 +133,18 @@
 			<artifactId>opentelemetry-exporter-otlp</artifactId>
 		</dependency>
 
+		<!-- automatically reads your database schema and gives you 
+		 	an instant web interface to create, read, update, and delete 
+			data without writing controllers, -->
+		<!-- <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-rest</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-rest-hal-explorer</artifactId>
+		</dependency> -->
+
 
 	</dependencies>
 

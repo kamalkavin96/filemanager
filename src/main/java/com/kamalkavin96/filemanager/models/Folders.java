@@ -35,10 +35,12 @@ public class Folders {
     @Column(name = "owner_id")
     private Long ownerId;
 
-    @Column(name = "parent_id")
+    @Column(name = "parent_id", nullable = true)
     private String parentId;
 
     private String storagePath;
+
+    private String folderPath;
 
     private LocalDateTime createdAt;
 

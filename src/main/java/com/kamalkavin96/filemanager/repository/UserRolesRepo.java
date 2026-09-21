@@ -24,8 +24,7 @@ public interface UserRolesRepo extends JpaRepository<UserRoles, Long> {
             SELECT
                 u.id, 
                 u.username, 
-                u.email, 
-                u.dob, 
+                u.email,
                 u.created_at as createdAt, 
                 u.update_at as updateAt,
                 STRING_AGG(DISTINCT r.name, ',' ORDER BY r.name) as roles
@@ -43,7 +42,6 @@ public interface UserRolesRepo extends JpaRepository<UserRoles, Long> {
                 u.id, 
                 u.username, 
                 u.email, 
-                u.dob, 
                 u.created_at as createdAt, 
                 u.update_at as updateAt,
                 STRING_AGG(DISTINCT r.name, ',' ORDER BY r.name) as roles
@@ -60,8 +58,7 @@ public interface UserRolesRepo extends JpaRepository<UserRoles, Long> {
             SELECT
                 u.id, 
                 u.username, 
-                u.email, 
-                u.dob, 
+                u.email,
                 u.created_at as createdAt, 
                 u.update_at as updateAt,
                 STRING_AGG(DISTINCT r.name, ',' ORDER BY r.name) as roles

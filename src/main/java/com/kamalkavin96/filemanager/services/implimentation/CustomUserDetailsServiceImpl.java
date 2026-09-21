@@ -8,8 +8,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.kamalkavin96.filemanager.dto.auth.CustomUserDetails;
 import com.kamalkavin96.filemanager.models.Role;
 import com.kamalkavin96.filemanager.models.User;
+import com.kamalkavin96.filemanager.models.UserBaseFolder;
+import com.kamalkavin96.filemanager.repository.UserBaseFolderRepo;
 import com.kamalkavin96.filemanager.repository.UserRepo;
 import com.kamalkavin96.filemanager.repository.UserRolesRepo;
 
@@ -24,20 +27,21 @@ public class CustomUserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String emailId) throws UsernameNotFoundException {
-        
+
         User user = userRepo.findByEmail(emailId)
-            .orElseThrow(()-> new UsernameNotFoundException("Email not found: "+ emailId));
+                .orElseThrow(() -> new UsernameNotFoundException("Email not found: " + emailId));
 
         List<Role> roles = userRolesRepo.findByUserId(user.getId());
         List<SimpleGrantedAuthority> authorities = roles
-            .stream()
-            .map(r -> new SimpleGrantedAuthority(r.getName())).toList();
+                .stream()
+                .map(r -> new SimpleGrantedAuthority(r.getName())).toList();
 
-        return org.springframework.security.core.userdetails.User
-            .withUsername(user.getEmail())
-            .password(user.getPassword())
-            .authorities(authorities)
-            .build();
+        return new CustomUserDetails(
+                user.getId(),
+                user.getEmail(),
+                user.getPassword(),
+                authorities,
+                "user_"+user.getId().toString());
     }
 
 }

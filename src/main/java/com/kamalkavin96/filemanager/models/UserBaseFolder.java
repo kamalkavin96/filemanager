@@ -7,12 +7,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity 
 @Table(name = "user_base_folder")
 @AllArgsConstructor 
 @NoArgsConstructor 
+@Data
 public class UserBaseFolder {
 
     @Id 
@@ -21,4 +23,7 @@ public class UserBaseFolder {
 
     @Column(unique = true)
     private String name;
+
+    @Column(nullable = false, name = "user_id", unique = true)
+    private Long userId;
 }

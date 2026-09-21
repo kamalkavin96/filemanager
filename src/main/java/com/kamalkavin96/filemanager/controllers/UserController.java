@@ -12,11 +12,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.kamalkavin96.filemanager.dto.auth.CustomUserDetails;
 import com.kamalkavin96.filemanager.dto.request.user.CreateUserReq;
 import com.kamalkavin96.filemanager.dto.response.UserDetailRes;
 import com.kamalkavin96.filemanager.exception.UserNotFoundException;
@@ -38,7 +40,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RequestMapping("/api/v1/users")
 @Tag(name = "User Management")
 public class UserController {
-    
+
     private final UserServiceImpl userServiceImpl;
     private final UserService userService;
 
@@ -46,6 +48,8 @@ public class UserController {
     @Operation(summary = "Create User")
     public ResponseEntity<UserDetailRes> create(
             @Valid @RequestBody CreateUserReq createUserReq) {
+
+           System.out.println("========== REGISTER CONTROLLER CALLED ==========");
 
         UserDetailRes newUser = userService.createUser(createUserReq);
         return ResponseEntity.ok(newUser);
@@ -68,7 +72,9 @@ public class UserController {
     @GetMapping("/me")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @Operation(summary = "Get User")
-    public ResponseEntity<UserDetailRes> getMe(Authentication authentication) {
+    public ResponseEntity<UserDetailRes> getMe(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            Authentication authentication) {
 
         return ResponseEntity.ok(userServiceImpl.getCurrentUser(authentication.getName()));
     }
@@ -76,21 +82,19 @@ public class UserController {
     @DeleteMapping("/{userId}")
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Delete User")
-    public ResponseEntity<Map<String, Object>> delete(@PathVariable("userId") Long userId) {
+    public ResponseEntity<Map<String, Object>> delete(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @PathVariable("userId") Long userId) {
         if (userServiceImpl.deleteUser(userId)) {
             return ResponseEntity.ok(
-                Map.of(
-                    ConstantVariable.DELETED, true, ConstantVariable.MESSAGE,
-                    ConstantVariable.USER_DETETED.formatted(userId)
-                )
-            );
+                    Map.of(
+                            ConstantVariable.DELETED, true, ConstantVariable.MESSAGE,
+                            ConstantVariable.USER_DETETED.formatted(userId)));
         }
         return ResponseEntity.ok(
                 Map.of(
-                    ConstantVariable.DELETED, false, 
-                    ConstantVariable.MESSAGE, ConstantVariable.USER_NOT_DETETED
-                )
-            );
+                        ConstantVariable.DELETED, false,
+                        ConstantVariable.MESSAGE, ConstantVariable.USER_NOT_DETETED));
     }
 
     @ExceptionHandler
@@ -106,6 +110,5 @@ public class UserController {
                 .status(HttpStatus.NOT_FOUND)
                 .body(Map.of(ConstantVariable.MESSAGE, exception.getMessage()));
     }
-    
 
 }

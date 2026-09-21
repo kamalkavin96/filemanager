@@ -36,6 +36,7 @@ public class UserServiceImpl implements UserService {
     private final FolderServicesImpl folderServicesImpl;
 
     @Override
+    @Transactional
     public UserDetailRes createUser(CreateUserReq createUserReq) {
 
         if (userRepo.existsByUsername(createUserReq.getUsername())) {
@@ -60,7 +61,7 @@ public class UserServiceImpl implements UserService {
 
         List<Role> roles = userRolesServiceImpl.getUserRole(newUser.getId());
 
-        folderServicesImpl.createUserSpace(newUser.getId().toString());
+        folderServicesImpl.createUserSpace("user_"+newUser.getId().toString(), newUser.getId());
 
         return new UserDetailRes(
                 newUser.getId(),
@@ -110,6 +111,7 @@ public class UserServiceImpl implements UserService {
         User user = findUserById(userId);
         userRolesRepo.deleteByUserId(userId);
         userRepo.deleteById(user.getId());
+        folderServicesImpl.deleteUserSpace(user.getId().toString());
         return true;
     }
 
